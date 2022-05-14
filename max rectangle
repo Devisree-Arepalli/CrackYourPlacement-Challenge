@@ -1,0 +1,42 @@
+class Solution{
+  public:
+  int maxHist(int M[],int m)
+  {
+      int k=M[0];
+      stack<int>st;
+      st.push(-1);
+      vector<int>l(m,-1),r(m,m);
+      int i=0;
+      while(i<m)
+      {
+          while(!st.empty() && st.top()!=-1 && M[st.top()]>M[i])
+          {
+              r[st.top()]=i;
+              st.pop();
+          }
+          if(M[i]==M[i-1])
+           l[i]=l[i-1];
+           else
+           l[i]=st.top();
+          st.push(i);
+          i++;
+      }
+      for(int j=0;j<m;j++)
+       k=max(k,M[j]*(r[j]-l[j]-1));
+  
+      return k;
+  }
+    int maxArea(int M[MAX][MAX], int n, int m) {
+        // Your code here
+        int res=maxHist(M[0],m);
+        for(int i=1;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            if(M[i][j])
+            M[i][j]+=M[i-1][j];
+            
+            res=max(res,maxHist(M[i],m));
+        }
+        return res;
+    }
+};
