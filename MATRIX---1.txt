@@ -1,0 +1,189 @@
+Q1)MAXIMUM RECTANGLE
+class Solution{
+  public:
+  int maxHist(int M[],int m)
+  {
+      int k=M[0];
+      stack<int>st;
+      st.push(-1);
+      vector<int>l(m,-1),r(m,m);
+      int i=0;
+      while(i<m)
+      {
+          while(!st.empty() && st.top()!=-1 && M[st.top()]>M[i])
+          {
+              r[st.top()]=i;
+              st.pop();
+          }
+          if(M[i]==M[i-1])
+           l[i]=l[i-1];
+           else
+           l[i]=st.top();
+          st.push(i);
+          i++;
+      }
+      for(int j=0;j<m;j++)
+       k=max(k,M[j]*(r[j]-l[j]-1));
+  
+      return k;
+  }
+    int maxArea(int M[MAX][MAX], int n, int m) {
+        // Your code here
+        int res=maxHist(M[0],m);
+        for(int i=1;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            if(M[i][j])
+            M[i][j]+=M[i-1][j];
+            
+            res=max(res,maxHist(M[i],m));
+        }
+        return res;
+    }
+};
+//////////////////////////////////////////////////
+Q2) NUMBER OF ISLANDS
+void dfs(int M[][COL],int i,int j,int n,int m)
+{
+    if(i<0||i>=n||j<0||j>=m||M[i][j]==0)
+    return;
+    M[i][j]=0;
+ 
+    dfs(M,i+1,j,n,m);
+                dfs(M,i-1,j,n,m);
+                dfs(M,i,j-1,n,m);
+                dfs(M,i,j+1,n,m);
+                dfs(M,i-1,j-1,n,m);
+                dfs(M,i-1,j+1,n,m);
+                dfs(M,i+1,j-1,n,m);
+                dfs(M,i+1,j+1,n,m);
+}
+int countIslands(int M[][COL], int n, int m) {
+    // your code goes here
+    int c=0;
+    //vector<vector<int>>vis(n,vector<int>(m,0));
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
+            if(M[i][j]==1)
+            {
+                
+                dfs(M,i+1,j,n,m);
+                dfs(M,i-1,j,n,m);
+                dfs(M,i,j-1,n,m);
+                dfs(M,i,j+1,n,m);
+                dfs(M,i-1,j-1,n,m);
+                dfs(M,i-1,j+1,n,m);
+                dfs(M,i+1,j-1,n,m);
+                dfs(M,i+1,j+1,n,m);
+                c++;
+            }
+        }
+    }
+    return c;
+}
+///////////////////////////////////////////////////
+Q3)REPLACE 'O' WITH 'X'
+class Solution{
+public:
+void floodfill(vector<vector<char>>& mat,int i,int j,int n,int m,char p,char y)
+{
+    if(i<0||i>=n||j<0||j>=m)
+    return;
+    if(mat[i][j]!=p)
+    return;
+      mat[i][j]=y;
+      floodfill(mat,i+1,j,n,m,'-','O');
+      floodfill(mat,i,j-1,n,m,'-','O');
+      floodfill(mat,i,j+1,n,m,'-','O');
+      floodfill(mat,i-1,j,n,m,'-','O');
+}
+    vector<vector<char>> fill(int n, int m, vector<vector<char>> mat)
+    {
+        // code here
+        for(int i=0;i<n;i++)
+        for(int j=0;j<m;j++)
+        if(mat[i][j]=='O')
+         mat[i][j]='-';
+         
+         for(int i=0;i<n;i++)
+         if(mat[i][0]=='-')
+         floodfill(mat,i,0,n,m,'-','O');
+         for(int i=0;i<n;i++)
+         if(mat[i][m-1]=='-')
+         floodfill(mat,i,m-1,n,m,'-','O');
+         for(int i=0;i<m;i++)
+         if(mat[0][i]=='-')
+          floodfill(mat,0,i,n,m,'-','O');
+         for(int i=0;i<m;i++)
+         if(mat[n-1][i]=='-')
+         floodfill(mat,n-1,i,n,m,'-','O');
+         
+         for(int i=0;i<n;i++)
+         for(int j=0;j<m;j++)
+           if(mat[i][j]=='-')
+           mat[i][j]='X';
+    
+    return mat;      
+    }
+};
+/////////////////////////////////////////////////
+Q4)SPIRAL MATRIX
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        int r1=0;
+int c1=0;
+int r2=matrix.size();
+int c2=matrix[0].size();
+
+    int total=r2*c2;
+    int count=0;
+
+    vector<int> result;
+
+    while(count<total){
+
+        for(int i=c1;i<c2 && count<total;i++){
+            result.push_back(matrix[r1][i]);
+            count++;
+        }
+        r1++;
+        for(int i=r1;i<r2 && count<total;i++){
+            result.push_back(matrix[i][c2-1]);
+            count++;
+        }
+        c2--;
+        for(int i=c2-1;i>=c1 && count<total;i--){
+            result.push_back(matrix[r2-1][i]);
+            count++;
+        }
+        r2--;
+        for(int i=r2-1;i>=r1 && count<total;i--){
+            result.push_back(matrix[i][c1]);
+            count++;
+        }
+        c1++;
+    }
+    return result;
+
+
+}
+};
+///////////////////////////////////////////////////
+Q5)ROTATE IMAGE
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        int m=matrix.size();
+        int n=matrix[0].size();
+        for(int i=0;i<m;i++)
+            for(int j=0;j<i;j++)
+                swap(matrix[i][j],matrix[j][i]);
+        
+        for(int i=0;i<m;i++)
+            reverse(matrix[i].begin(),matrix[i].end());
+    }
+};
+//////////////////////////////////////////////////////////
